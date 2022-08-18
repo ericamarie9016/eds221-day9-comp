@@ -1,0 +1,36 @@
+---
+title: "kable tables"
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(lterdatasampler)
+library(kableExtra)
+```
+
+Create a summary table
+
+```{r}
+maple_height_sum <- hbr_maples |> 
+  group_by(watershed, year) |> 
+  summarize(mean_stem = round(mean(stem_length, na.rm = TRUE), 1),
+            stand_stem = round(sd(stem_length, na.rm = TRUE), 1))
+maple_height_sum
+```
+
+If rendering this to be final, does not look presentable
+
+```{r}
+maple_height_sum |> 
+  kable(col.names = c("Watershed", "Year", 
+                      "Mean Seedling Hiehgt (sq.cm)", 
+                      "SD Seedling Hiehgt (sq.cm)")) |> 
+  kable_styling(bootstrap_options = "striped") |> 
+  column_spec(1, bold = TRUE, background = "purple") |> 
+  add_header_above(c(" " = 2, "Seedling dimensions" = 2)) |> 
+  scroll_box(height = "100px", width = "200px")
+```
+
+Track significant figures: should match the decimal places of original data collection
